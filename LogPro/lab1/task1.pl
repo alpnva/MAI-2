@@ -35,13 +35,22 @@ Permute(L, [X | T]):-Delete(X, L, Y), Permute(Y, T).
 
 Sublist(S, L):-Append(_, L1, L), Append(S, _, L1).
 
-% Вариант 5. Удаление N первых элементов
+% Вариант 5. Удаление N первых элементов.
 % Первый параметр - количество элементов, второй - список исходный, третий - список после удаления
     % С использованием стандартных предикатов
-    
+    delete_n(X, N, Y):- Append(A, X, Y), Length(A, N).
     % Без использования стандартных предикатов
-    delete_n(0, L, L).
-    delete_n(_, [], []).
-    delete_n(N, [_|T1], L2):- N > 0, N1 is N-1, delete_n(N1, T1, L2).
-
-
+    delete_n2(0, L, L).
+    delete_n2(_, [], []).
+    delete_n2(N, [_|T1], L2):- N > 0, N1 is N-1, delete_n2(N1, T1, L2).
+    
+% Вариант 10. Лексигографическое сравнение двух списков.    
+    % С использованием стандартных предикатов
+    lincompare([], []).
+    lincompare([X|Tail], Y):- Remove(Y, X, Y1), lincompare(Tail, Y1).
+    % Без использования стандартных предикатов
+    lincompare2([X|Tail], [Y|Tail]):- X =:= Y, lincompare2(Tail, Tail).
+    lincompare2([X], [Y]):- X =:= Y.
+    
+% Лексиграфическое сравнение двух списков при удалении N первых элементов.
+    tailcompare(L1, L2, K):- delete_n2(K, L1, S1), delete_n2(K, L2, S2), lincompare2(S1, S2).
